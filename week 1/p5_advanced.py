@@ -25,8 +25,17 @@
 
 def min_coins(amount: int, coins: list) -> int:
     """Вернуть минимальное число монет или -1, если нельзя."""
-    # TODO: реализовать
-    raise NotImplementedError
+    count = 0
+
+    while amount > 0:
+        for coin in coins:
+            if coin <= amount:
+                amount -= coin
+                count += 1
+                break
+        else:
+            return -1
+    return count
 
 
 # ============================================================
@@ -49,9 +58,16 @@ def min_coins(amount: int, coins: list) -> int:
 
 def max_intervals(intervals: list) -> int:
     """Вернуть максимальное число непересекающихся интервалов."""
-    # TODO: реализовать
-    raise NotImplementedError
-
+    intervals = sorted(intervals, key=lambda interval: interval[1])
+    count = 0
+    last_end = None
+    
+    for interval in intervals:
+        if last_end is None or interval[0] >= last_end:
+            count += 1
+            last_end = interval[1]
+    
+    return count
 
 # ============================================================
 # Задача 3. Дробный рюкзак
@@ -74,8 +90,24 @@ def fractional_knapsack(capacity: float, items: list) -> float:
     items: список кортежей (weight, value).
     Вернуть максимальную суммарную стоимость.
     """
-    # TODO: реализовать
-    raise NotImplementedError
+    items = sorted(items, key=lambda item: item[1] / item[0], reverse=True)
+
+    remaining_capacity = capacity
+    total_value = 0
+
+    for item in items:
+        weight = item[0]
+        value = item[1]
+        if weight <= remaining_capacity:
+            total_value += value
+            remaining_capacity -= weight
+        else:
+            fraction = remaining_capacity / weight
+            total_value += value * fraction
+            remaining_capacity = 0
+            break
+    
+    return total_value
 
 
 # ============================================================
@@ -103,8 +135,24 @@ def fractional_knapsack(capacity: float, items: list) -> float:
 
 def min_platforms(arrivals: list, departures: list) -> int:
     """Вернуть минимальное число платформ."""
-    # TODO: реализовать
-    raise NotImplementedError
+
+    events = []
+    for arrival in arrivals:
+        events.append((arrival, 1))
+
+    for departure in departures:
+        events.append((departure, -1))
+
+    events.sort()
+
+    current_platforms = 0
+    max_platforms = 0
+
+    for time, change in events:
+        current_platforms += change
+        max_platforms = max(max_platforms, current_platforms)
+
+    return max_platforms
 
 
 # ============================================================
@@ -119,7 +167,7 @@ if __name__ == "__main__":
 
     # 2
     intervals = [(1,4),(3,5),(0,6),(5,7),(3,9),(5,9),(6,10),(8,11)]
-    assert max_intervals(intervals) == 4
+    assert max_intervals(intervals) == 3
     assert max_intervals([]) == 0
 
     # 3

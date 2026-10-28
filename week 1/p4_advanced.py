@@ -31,6 +31,8 @@
 
 def safe_input(s: str) -> str:
     """Вернуть 'OK: <n>' или 'Not a number'."""
+    # Я просто попробовала через try и except, поскольку это была моя первая мысль.
+    # Ответ без обработки ошибки все равно есть выше, а тут я хоть вспомнила эти конструкции
     try:
         int(s)
     except ValueError:
@@ -102,11 +104,14 @@ def format_receipt(product: str, cost: float, amount: int) -> str:
 #   Decimal('19.99') * 3 * (1 + Decimal('0.13'))
 #   .quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 
 def exact_total(price: str, quantity: int, tax_percent: str) -> str:
     """Вернуть итоговую стоимость строкой с 2 знаками."""
-    result = Decimal(price) * quantity * (Decimal(tax_percent) * 0,01
+    tax = Decimal(tax_percent) / 100
+    tax_multiplier = 1 + tax
+    result = (Decimal(price) * quantity * tax_multiplier).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return str(result) # преобразовала в строку, потому что иначе не проходились тесты assert 
 
 
 # ============================================================
@@ -122,8 +127,14 @@ def exact_total(price: str, quantity: int, tax_percent: str) -> str:
 
 def compare_float_decimal() -> tuple:
     """Вернуть (float_sum, float_eq, decimal_sum, decimal_eq)."""
-    # TODO: реализовать
-    raise NotImplementedError
+
+    float_sum = 0.1 + 0.2
+    float_eq = float_sum == 0.3
+
+    decimal_sum = Decimal("0.1") + Decimal("0.2")
+    decimal_eq = decimal_sum == Decimal("0.3")
+
+    return float_sum, float_eq, decimal_sum, decimal_eq
 
 
 # ============================================================
@@ -139,10 +150,13 @@ def compare_float_decimal() -> tuple:
 #   In: 1/6
 #   Out: 1/2
 
+from fractions import Fraction
+
 def sum_fractions(frac1: str, frac2: str) -> str:
     """Вернуть несократимую сумму дробей строкой."""
-    # TODO: реализовать
-    raise NotImplementedError
+    frac1 = Fraction(frac1)
+    frac2 = Fraction(frac2)
+    return str(frac1 + frac2)
 
 
 # ============================================================
@@ -165,8 +179,14 @@ def sum_fractions(frac1: str, frac2: str) -> str:
 
 def split_bill(account: str, guests: int) -> dict:
     """Вернуть {'share': Decimal, 'total': Decimal, 'over': Decimal}."""
-    # TODO: реализовать
-    raise NotImplementedError
+    
+    account = Decimal(account)
+
+    share = (account / guests).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    total = share * guests
+    over = total - account
+
+    return {"share": share, "total": total, "over": over}
 
 
 # ============================================================
