@@ -7,6 +7,7 @@
 **Преподаватель:** Виктория Игоревна Фирсанова  
 **Telegram:** [t.me/vifirsanova](https://t.me/vifirsanova)  
 **Почта:** vifirsanova@gmail.com
+**Курс**: [https://github.com/vifirsanova/hse-python-course](https://github.com/vifirsanova/hse-python-course)
 
 ---
 
